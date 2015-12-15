@@ -10,19 +10,19 @@ import java.net.Socket;
 public class Serveur 
 {
     private ServerSocket socketServer;//Variable du socket du serveur permettant aux clients de s'y connecter
-    private BufferedReader in;
-    private PrintWriter out;
-    private Socket socketDuServeur;
+    private BufferedReader in;  //Permet de lire des caractères
+    private PrintWriter out;    //Permet d'écrire un message
+    private Socket socketDuClient;  //Socket servant à communiquer avec le client
     
     public Serveur(int numPort)
     {
-        socketDuServeur = null;  //Initialisation d'un socket pour la communication avec le/les clients
+        socketDuClient = null;  //Initialisation d'un socket pour la communication avec le/les clients
         
         try {
             socketServer = new ServerSocket(2009);  //Initialisation d'un ServerSocket sur le port 2009
             System.out.println("Le serveur est à l'écoute du port "+socketServer.getLocalPort());   //Indique sur quel port le serveur est à l'écoute
-        } catch (Exception e) {
-
+        } catch (IOException e) {   //En cas d'erreur
+            e.printStackTrace();
         }
         
     }
@@ -34,18 +34,18 @@ public class Serveur
         int i = 0;  //Initialisation d'un compteur
         while(i<5) //Pendant 5 itérations
         {
-            serveur.accepterClient();
+            serveur.accepterClient();   //Attend et accepte un client
             
-            String messageClient = serveur.lectureMessage(serveur.socketDuServeur);
-            System.out.println(messageClient);
+            String messageClient = serveur.lectureMessage(serveur.socketDuClient);  //Lit et récupère le message du client
+            System.out.println(messageClient);  //Affiche le message du client
             
-            String ipClient = serveur.socketDuServeur.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
-            serveur.envoiMessage(serveur.socketDuServeur, "Bienvenue client, vous avez pour adresse IP : "+ipClient);
+            String ipClient = serveur.socketDuClient.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
+            serveur.envoiMessage(serveur.socketDuClient, "Bienvenue client, vous avez pour adresse IP : "+ipClient);    //Envoie un message au client
             
-            serveur.fermerClient();
+            serveur.fermerClient(); //Ferme la connexion avec le client
             i++;    //Le compteur augmente
         }
-        serveur.fermetureServeur();
+        serveur.fermetureServeur(); //Ferme le socket serveur
     }
     
     public boolean envoiMessage(Socket socketClient,String message)
@@ -54,7 +54,7 @@ public class Serveur
             out = new PrintWriter(socketClient.getOutputStream());   //Récupère l'OutputStream du socket du client et ouvre un PrintWriter permettant au serveur d'y écrire
             out.println(message); //Envoi d'un message au client ainsi que son adresse IP
             out.flush();    //Vide l'OutputStream
-        }catch (IOException e){
+        }catch (IOException e){ //En cas d'erreur
             e.printStackTrace();
             return false;
         }
@@ -64,10 +64,9 @@ public class Serveur
     public String lectureMessage(Socket SocketClient)
     {
         try{
-        in = new BufferedReader (new InputStreamReader (socketDuServeur.getInputStream())); //permet de lire les caractères provenant du socketduserveur
-        return in.readLine();
-        }catch (IOException e)
-        {
+        in = new BufferedReader (new InputStreamReader (socketDuClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
+        return in.readLine();   //Renvoie le contenu de in
+        }catch (IOException e){ //En cas d'erreur
             e.printStackTrace();
             return null;
         }
@@ -76,8 +75,8 @@ public class Serveur
     public void fermetureServeur()
     {
         try {
-            socketServer.close();
-        } catch (IOException ex) {
+            socketServer.close();   //Ferme le socket serveur
+        } catch (IOException ex) {  //En cas d'erreur
             ex.printStackTrace();
         }
     }
@@ -85,11 +84,10 @@ public class Serveur
     public void accepterClient()
     {
         try{
-            this.socketDuServeur =socketServer.accept();
+            this.socketDuClient =socketServer.accept(); //Attend la connexion d'un client
             System.out.println("Un client s'est connecté !");   //Le client s'est connecté
         }
-        catch(IOException e)
-        {
+        catch(IOException e){   //En cas d'erreur
             e.printStackTrace();
         }
     }
@@ -97,20 +95,19 @@ public class Serveur
     public void fermerClient()
     {
         try{
-        this.socketDuServeur.close();
-        }catch(IOException e)
-        {
+        this.socketDuClient.close();    //Ferme le socket du client
+        }catch(IOException e){  //En cas d'erreur
             e.printStackTrace();
         }
     }
     
-    public Socket getSocketDuServeur()
+    public Socket getSocketDuClient()
     {
-        return this.socketDuServeur;
+        return this.socketDuClient; //Renvoie le socket du client
     }
     
     public ServerSocket getServerSocket()
     {
-        return  this.socketServer;
+        return  this.socketServer;  //Renvoie le socket serveur
     }
 }
