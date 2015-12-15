@@ -10,6 +10,7 @@ public class Serveur {
         Socket socketduserveur = null;  //Initialisation d'un socket pour la communication avec le/les clients
         try {
             socketserver = new ServerSocket(2009);  //Initialisation d'un ServerSocket sur le port 2009
+            System.out.println("Le serveur est à l'écoute du port "+socketserver.getLocalPort());   //Indique sur quel port le serveur est à l'écoute
             int i = 0;  //Initialisation d'un compteur
             while(i<5) //Pendant 5 itérations
             {
