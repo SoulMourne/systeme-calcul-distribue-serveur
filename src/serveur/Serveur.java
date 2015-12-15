@@ -7,6 +7,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Classe faisant l'abstraction d'un serveur et gérant les connexions entrantes et sortante du serveur
+ */
 public class Serveur 
 {
     private ServerSocket socketServer;//Variable du socket du serveur permettant aux clients de s'y connecter
@@ -14,6 +17,10 @@ public class Serveur
     private PrintWriter out;    //Permet d'écrire un message
     private Socket socketDuClient;  //Socket servant à communiquer avec le client
     
+    /**
+     * Constructeur par défaut
+     * @param numPort Le numéro du port sur lequel mettre le serveur à l'écoute
+     */
     public Serveur(int numPort)
     {
         socketDuClient = null;  //Initialisation d'un socket pour la communication avec le/les clients
@@ -27,7 +34,11 @@ public class Serveur
         
     }
     
-    public static void main(String[] zero) 
+    /**
+     * Méthode d'éxécution du programme
+     * @param args Arguments à ajouter pour le lancement du programme
+     */
+    public static void main(String[] args) 
     {
         Serveur serveur = new Serveur(2009); //Ouverture du serveur
         
@@ -48,6 +59,12 @@ public class Serveur
         serveur.fermetureServeur(); //Ferme le socket serveur
     }
     
+    /**
+     * Envoie une chaine de caractères au client via le socket correspondant
+     * @param socketClient socket permettant de communiquer avec le client
+     * @param message chaine de caractères à envoyer sur le socket
+     * @return booléen si le message a été ou non envoyé
+     */
     public boolean envoiMessage(Socket socketClient,String message)
     {
         try{
@@ -61,7 +78,12 @@ public class Serveur
         return true;
     }
     
-    public String lectureMessage(Socket SocketClient)
+    /**
+     * Lit un message envoyé via le socket du client
+     * @param socketClient Le socket sur lequel le message est envoyé
+     * @return la chaine de caractère lue ou bien null si erreur
+     */
+    public String lectureMessage(Socket socketClient)
     {
         try{
         in = new BufferedReader (new InputStreamReader (socketDuClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
@@ -72,6 +94,9 @@ public class Serveur
         }
     }
 
+    /**
+     * Ferme le socket serveur
+     */
     public void fermetureServeur()
     {
         try {
@@ -81,6 +106,10 @@ public class Serveur
         }
     }
     
+    /**
+     * Attend un socket client et l'accepte.
+     * Signale que le client s'est bien connecté
+     */
     public void accepterClient()
     {
         try{
@@ -92,20 +121,33 @@ public class Serveur
         }
     }
     
+    /**
+     * Ferme le socket du client 
+     * Signale que le client a été déconnecté
+     */
     public void fermerClient()
     {
         try{
         this.socketDuClient.close();    //Ferme le socket du client
+            System.out.println("Un client s'est déconnecté !");
         }catch(IOException e){  //En cas d'erreur
             e.printStackTrace();
         }
     }
     
+    /**
+     * Renvoie le socket du client
+     * @return le socket du client
+     */
     public Socket getSocketDuClient()
     {
         return this.socketDuClient; //Renvoie le socket du client
     }
     
+    /**
+     * Renvoie le socket d'écoute du Serveur
+     * @return le socket d'écoute du serveur
+     */
     public ServerSocket getServerSocket()
     {
         return  this.socketServer;  //Renvoie le socket serveur
