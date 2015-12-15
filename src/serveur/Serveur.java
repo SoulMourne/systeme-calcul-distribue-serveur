@@ -15,6 +15,7 @@ public class Serveur {
             {
                 socketduserveur = socketserver.accept(); //Le Socket attend un socket de la part du client
                 System.out.println("Un client s'est connecté !");   //Le client s'est connecté
+//                String ipClient = socketduserveur.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
                 socketduserveur.close();    //Le socket se ferme
                 i++;    //Le compteur augmente
             }
