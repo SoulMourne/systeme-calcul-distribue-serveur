@@ -13,7 +13,7 @@ public class ServeurThread extends Thread
     private Socket socket;
     private int numClient;
     
-    private ServeurThread(int parNumClient, Socket s)
+    public ServeurThread(int parNumClient, Socket s)
     {
         this.socket = s;
         this.numClient = parNumClient;
