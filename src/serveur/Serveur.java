@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 /**
  * Classe faisant l'abstraction d'un serveur et gérant les connexions entrantes et sortante du serveur
@@ -16,6 +17,7 @@ public class Serveur
     private BufferedReader in;  //Permet de lire des caractères
     private PrintWriter out;    //Permet d'écrire un message
     private Socket socketDuClient;  //Socket servant à communiquer avec le client
+    private HashMap <Integer, ServeurThread> connexions;
     
     /**
      * Constructeur par défaut
@@ -24,7 +26,7 @@ public class Serveur
     public Serveur(int numPort)
     {
         socketDuClient = null;  //Initialisation d'un socket pour la communication avec le/les clients
-        
+        connexions = new HashMap<>();
         try {
             socketServer = new ServerSocket(2009);  //Initialisation d'un ServerSocket sur le port 2009
             System.out.println("Le serveur est à l'écoute du port "+socketServer.getLocalPort());   //Indique sur quel port le serveur est à l'écoute
@@ -43,7 +45,7 @@ public class Serveur
         Serveur serveur = new Serveur(2009); //Ouverture du serveur
         
         int i = 0;  //Initialisation d'un compteur
-        while(i<5) //Pendant 5 itérations
+        while(i<20) //Pendant 5 itérations
         {
             serveur.accepterClient();   //Attend et accepte un client
             
@@ -114,7 +116,16 @@ public class Serveur
     {
         try{
             this.socketDuClient =socketServer.accept(); //Attend la connexion d'un client
-            System.out.println("Un client s'est connecté !");   //Le client s'est connecté
+            int i;
+            for (i = 0; i <= this.connexions.size();i++) //Cherche une place vacante dans la liste des ServeurThread
+            {
+                if (!this.connexions.containsKey(i))    //Si la place est vacante ajoute un serveur Thread sinon l'ajoute en bout de file
+                {
+                    break;
+                }
+            }
+            this.connexions.put(i, new ServeurThread(i,socketDuClient));
+            System.out.println("Le client " +i+ " s'est connecté !");   //Le client s'est connecté
         }
         catch(IOException e){   //En cas d'erreur
             e.printStackTrace();
