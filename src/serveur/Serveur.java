@@ -17,7 +17,7 @@ public class Serveur
     private BufferedReader in;  //Permet de lire des caractères
     private PrintWriter out;    //Permet d'écrire un message
     private Socket socketDuClient;  //Socket servant à communiquer avec le client
-    private HashMap <Integer, ServeurThread> connexions;
+    private HashMap <Integer, ServeurThread> connexions; //HashMap permettant de gérer les Serveurs Thread en leur donnant un numero
     
     /**
      * Constructeur par défaut
