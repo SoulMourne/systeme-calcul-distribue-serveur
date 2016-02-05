@@ -14,8 +14,6 @@ import java.util.HashMap;
 public class Serveur 
 {
     private ServerSocket socketServer;//Variable du socket du serveur permettant aux clients de s'y connecter
-    private BufferedReader in;  //Permet de lire des caractères
-    private PrintWriter out;    //Permet d'écrire un message
     private Socket socketDuClient;  //Socket servant à communiquer avec le client
     private HashMap <Integer, ServeurThread> connexions; //HashMap permettant de gérer les Serveurs Thread en leur donnant un numero
     
@@ -49,51 +47,12 @@ public class Serveur
         {
             serveur.accepterClient();   //Attend et accepte un client
             
-            String messageClient = serveur.lectureMessage(serveur.socketDuClient);  //Lit et récupère le message du client
-            System.out.println(messageClient);  //Affiche le message du client
             
-            String ipClient = serveur.socketDuClient.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
-            serveur.envoiMessage(serveur.socketDuClient, "Bienvenue client, vous avez pour adresse IP : "+ipClient);    //Envoie un message au client
             
-            serveur.fermerClient(); //Ferme la connexion avec le client
+            //serveur.fermerClient(); //Ferme la connexion avec le client
             i++;    //Le compteur augmente
         }
         serveur.fermetureServeur(); //Ferme le socket serveur
-    }
-    
-    /**
-     * Envoie une chaine de caractères au client via le socket correspondant
-     * @param socketClient socket permettant de communiquer avec le client
-     * @param message chaine de caractères à envoyer sur le socket
-     * @return booléen si le message a été ou non envoyé
-     */
-    public boolean envoiMessage(Socket socketClient,String message)
-    {
-        try{
-            out = new PrintWriter(socketClient.getOutputStream());   //Récupère l'OutputStream du socket du client et ouvre un PrintWriter permettant au serveur d'y écrire
-            out.println(message); //Envoi d'un message au client ainsi que son adresse IP
-            out.flush();    //Vide l'OutputStream
-        }catch (IOException e){ //En cas d'erreur
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-    
-    /**
-     * Lit un message envoyé via le socket du client
-     * @param socketClient Le socket sur lequel le message est envoyé
-     * @return la chaine de caractère lue ou bien null si erreur
-     */
-    public String lectureMessage(Socket socketClient)
-    {
-        try{
-        in = new BufferedReader (new InputStreamReader (socketDuClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
-        return in.readLine();   //Renvoie le contenu de in
-        }catch (IOException e){ //En cas d'erreur
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /**
@@ -125,6 +84,7 @@ public class Serveur
                 }
             }
             this.connexions.put(i, new ServeurThread(i,socketDuClient));
+            this.connexions.get(i).start();
             System.out.println("Le client " +i+ " s'est connecté !");   //Le client s'est connecté
         }
         catch(IOException e){   //En cas d'erreur
