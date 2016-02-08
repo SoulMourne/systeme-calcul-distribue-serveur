@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe faisant l'abstraction d'un serveur gérer par un thread
@@ -44,6 +46,13 @@ public class ServeurThread extends Thread
         this.socketClient = parSocket;
         this.serveur = parServeur;
         this.numClient = parNumClient;
+        try {
+            this.in = new BufferedReader (new InputStreamReader (this.socketClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
+        this.out = new PrintWriter(socketClient.getOutputStream());   //Récupère l'OutputStream du socket du client et ouvre un PrintWriter permettant au serveur d'y écrire
+        } catch (IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
     }
     
     /**
@@ -84,15 +93,9 @@ public class ServeurThread extends Thread
      */
     public boolean envoiMessage(Socket socketClient,String message)
     {
-        try{
-            out = new PrintWriter(socketClient.getOutputStream());   //Récupère l'OutputStream du socket du client et ouvre un PrintWriter permettant au serveur d'y écrire
-            out.println(message); //Envoi d'un message au client ainsi que son adresse IP
-            out.flush();    //Vide l'OutputStream
-        }catch (IOException e){ //En cas d'erreur
-            System.err.println(e.getMessage());
-            return false;
-        }
-        return true;
+        out.println(message);
+        out.flush();
+        return !out.checkError();
     }
     
     /**
@@ -103,7 +106,6 @@ public class ServeurThread extends Thread
     public String lectureMessage(Socket socketClient)
     {
         try{
-        in = new BufferedReader (new InputStreamReader (this.socketClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
         return in.readLine();   //Renvoie le contenu de in
         }catch (IOException e){ //En cas d'erreur
             System.err.println(e.getMessage());
