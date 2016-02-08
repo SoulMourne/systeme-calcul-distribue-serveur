@@ -67,7 +67,7 @@ public class ServeurThread extends Thread
                     continuer = false;
                     this.socketClient.close(); //on ferme le socket du coté serveur
                     System.out.println("Le client "+this.numClient+ " est déconnecté");
-                    this.serveur.getConnexions().remove(numClient, this);
+                    this.serveur.getConnexions().remove(numClient, this); //retire le socket de la socket
                 }
             } catch (IOException ex) {
                 System.err.println(ex.getMessage());
