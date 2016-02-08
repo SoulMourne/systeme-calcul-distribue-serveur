@@ -105,7 +105,7 @@ public class ServeurThread extends Thread
         in = new BufferedReader (new InputStreamReader (this.socketClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
         return in.readLine();   //Renvoie le contenu de in
         }catch (IOException e){ //En cas d'erreur
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             return null;
         }
     }
