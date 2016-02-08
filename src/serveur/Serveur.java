@@ -83,7 +83,7 @@ public class Serveur
                     break;
                 }
             }
-            this.connexions.put(i, new ServeurThread(i,socketDuClient));
+            this.connexions.put(i, new ServeurThread(i,socketDuClient,this));
             this.connexions.get(i).start();
             System.out.println("Le client " +i+ " s'est connecté !");   //Le client s'est connecté
         }
@@ -122,5 +122,10 @@ public class Serveur
     public ServerSocket getServerSocket()
     {
         return  this.socketServer;  //Renvoie le socket serveur
+    }
+    
+    public HashMap<Integer, ServeurThread> getConnexions() 
+    {
+        return connexions;
     }
 }

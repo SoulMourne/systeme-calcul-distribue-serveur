@@ -3,12 +3,8 @@ package serveur;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Classe faisant l'abstraction d'un serveur gérer par un thread
@@ -16,6 +12,10 @@ import java.util.logging.Logger;
  */
 public class ServeurThread extends Thread
 {
+    /**
+     * Référence vers le serveur
+     */
+    private Serveur serveur;
     /**
      * Socket du client
      */
@@ -38,9 +38,10 @@ public class ServeurThread extends Thread
      * @param parNumClient Numéro du client
      * @param s Socket du client
      */
-    public ServeurThread(int parNumClient, Socket s)
+    public ServeurThread(int parNumClient, Socket parSocket, Serveur parServeur)
     {
-        this.socketClient = s;
+        this.socketClient = parSocket;
+        this.serveur = parServeur;
         this.numClient = parNumClient;
     }
     
@@ -61,11 +62,12 @@ public class ServeurThread extends Thread
         while(continuer)
         {
             try {
-                if (this.in.readLine()== null)
+                if (this.in.readLine()== null) //si le socket est fermé
                 {
-                continuer = false;
-                this.socketClient.close();
-                System.out.println("Le client "+this.numClient+ " est déconnecté");
+                    continuer = false;
+                    this.socketClient.close(); //on ferme le socket du coté serveur
+                    System.out.println("Le client "+this.numClient+ " est déconnecté");
+                    this.serveur.getConnexions().remove(numClient, this);
                 }
             } catch (IOException ex) {
                 System.err.println(ex.getMessage());
