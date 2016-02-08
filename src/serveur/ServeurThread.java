@@ -36,7 +36,8 @@ public class ServeurThread extends Thread
     /**
      * Constructeur par défaut prenant le numéro du client et le socket du client
      * @param parNumClient Numéro du client
-     * @param s Socket du client
+     * @param parSocket Socket du client
+     * @param parServeur Socket du serveur
      */
     public ServeurThread(int parNumClient, Socket parSocket, Serveur parServeur)
     {
@@ -88,7 +89,7 @@ public class ServeurThread extends Thread
             out.println(message); //Envoi d'un message au client ainsi que son adresse IP
             out.flush();    //Vide l'OutputStream
         }catch (IOException e){ //En cas d'erreur
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             return false;
         }
         return true;
