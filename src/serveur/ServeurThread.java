@@ -119,16 +119,16 @@ public class ServeurThread extends Thread
     
     public boolean envoiObjet(Socket socketClient, Object o)
     {
-    	try {
-    		//Connexion des flux de sortie
-			ObjectOutputStream sortie = new ObjectOutputStream(this.socketClient.getOutputStream()); // On instancie un flux de sortie
-			sortie.flush();
-			sortie.writeObject(o); // Echange de données avec le socket client
-		} catch (IOException e) { //En cas d'erreur
-			e.printStackTrace(); 
-			return false;
-		}
-		return true; // En cas de succès
+        try {
+            //Connexion des flux de sortie
+            ObjectOutputStream sortie = new ObjectOutputStream(this.socketClient.getOutputStream()); // On instancie un flux de sortie
+            sortie.flush();
+            sortie.writeObject(o); // Echange de données avec le socket client
+            } catch (IOException e) { //En cas d'erreur
+                System.err.println(e.getMessage());
+                    return false;
+            }
+            return true; // En cas de succès
 		
     }
 }
