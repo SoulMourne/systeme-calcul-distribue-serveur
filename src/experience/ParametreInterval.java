@@ -3,7 +3,7 @@ package experience;
 import java.lang.Double;
 
 /**
- * Classe qui permet d'enregistrer les paramètres via un interval
+ * Classe qui permet d'enregistrer les paramètres via un intervalle
  */
 public class ParametreInterval extends Parametre
 {
@@ -29,8 +29,8 @@ public class ParametreInterval extends Parametre
 
 	/**
 	 * Constructeur par défaut avec un pas de 0 par défaut
-	 * @param minimum Minimum de l'interval
-	 * @param maximum Maximum de l'interval
+	 * @param minimum Minimum de l'intervalle
+	 * @param maximum Maximum de l'intervalle
 	 */
 	public ParametreInterval(double minimum, double maximum)
 	{
@@ -42,8 +42,8 @@ public class ParametreInterval extends Parametre
 
 	/**
 	 * Constructeur par défaut avec un pas de 0 par défaut
-	 * @param minimum Minimum de l'interval
-	 * @param maximum Maximum de l'interval
+	 * @param minimum Minimum de l'intervalle
+	 * @param maximum Maximum de l'intervalle
 	 * @param step Pas de l'interval
 	 */
 	public ParametreInterval(double minimum, double maximum, double step)
@@ -76,4 +76,16 @@ public class ParametreInterval extends Parametre
     	this.current += this.step;
     	return resultat;
     }
+
+    /**
+     * Permet de savoir si il reste des paramètres dans le parcours des paramètres
+     * @return true si il reste des paramètres, false sinon
+     */
+    public abstract boolean hasNext();
+
+    /**
+     * Retourne le prochain paramètre du parcours
+     * @return paramètre sous forme de chaine de caractère
+     */
+    public abstract String next();
 }
