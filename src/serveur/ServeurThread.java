@@ -1,6 +1,7 @@
 package serveur;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
@@ -69,6 +70,8 @@ public class ServeurThread extends Thread
 
         String ipClient = this.socketClient.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
         this.envoiMessage(this.socketClient, "Bienvenue client, vous avez pour adresse IP : "+ipClient);    //Envoie un message au client
+        
+        File file = new File("test.txt");
         
         this.envoiObjet(socketClient, new Integer(4));
         
