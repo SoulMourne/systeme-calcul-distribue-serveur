@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe faisant l'abstraction d'un serveur gérer par un thread
@@ -36,13 +38,21 @@ public class ServeurThread extends Thread
     /**
      * Constructeur par défaut prenant le numéro du client et le socket du client
      * @param parNumClient Numéro du client
-     * @param s Socket du client
+     * @param parSocket Socket du client
+     * @param parServeur Socket du serveur
      */
     public ServeurThread(int parNumClient, Socket parSocket, Serveur parServeur)
     {
         this.socketClient = parSocket;
         this.serveur = parServeur;
         this.numClient = parNumClient;
+        try {
+            this.in = new BufferedReader (new InputStreamReader (this.socketClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
+        this.out = new PrintWriter(socketClient.getOutputStream());   //Récupère l'OutputStream du socket du client et ouvre un PrintWriter permettant au serveur d'y écrire
+        } catch (IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
     }
     
     /**
@@ -67,7 +77,7 @@ public class ServeurThread extends Thread
                     continuer = false;
                     this.socketClient.close(); //on ferme le socket du coté serveur
                     System.out.println("Le client "+this.numClient+ " est déconnecté");
-                    this.serveur.getConnexions().remove(numClient, this);
+                    this.serveur.getConnexions().remove(numClient, this); //retire le socket de la socket
                 }
             } catch (IOException ex) {
                 System.err.println(ex.getMessage());
@@ -83,15 +93,9 @@ public class ServeurThread extends Thread
      */
     public boolean envoiMessage(Socket socketClient,String message)
     {
-        try{
-            out = new PrintWriter(socketClient.getOutputStream());   //Récupère l'OutputStream du socket du client et ouvre un PrintWriter permettant au serveur d'y écrire
-            out.println(message); //Envoi d'un message au client ainsi que son adresse IP
-            out.flush();    //Vide l'OutputStream
-        }catch (IOException e){ //En cas d'erreur
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+        out.println(message);
+        out.flush();
+        return !out.checkError();
     }
     
     /**
@@ -102,10 +106,9 @@ public class ServeurThread extends Thread
     public String lectureMessage(Socket socketClient)
     {
         try{
-        in = new BufferedReader (new InputStreamReader (this.socketClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
         return in.readLine();   //Renvoie le contenu de in
         }catch (IOException e){ //En cas d'erreur
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             return null;
         }
     }

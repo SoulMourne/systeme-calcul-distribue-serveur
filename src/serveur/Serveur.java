@@ -83,7 +83,7 @@ public class Serveur
                     break;
                 }
             }
-            this.connexions.put(i, new ServeurThread(i,socketDuClient,this));
+            this.connexions.put(i, new ServeurThread(i,socketDuClient,this)); //Créé un serveur Thread et le référence dans la HashMap
             this.connexions.get(i).start();
             System.out.println("Le client " +i+ " s'est connecté !");   //Le client s'est connecté
         }
