@@ -2,9 +2,12 @@ package serveur;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -71,9 +74,9 @@ public class ServeurThread extends Thread
         String ipClient = this.socketClient.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
         this.envoiMessage(this.socketClient, "Bienvenue client, vous avez pour adresse IP : "+ipClient);    //Envoie un message au client
         
-        File file = new File("test.txt");
+        //File file = new File("test.txt");
         
-        this.envoiObjet(socketClient, new Integer(4));
+        //this.envoiObjet(socketClient, file);
         
         while(continuer)
         {
@@ -127,11 +130,47 @@ public class ServeurThread extends Thread
             ObjectOutputStream sortie = new ObjectOutputStream(this.socketClient.getOutputStream()); // On instancie un flux de sortie
             sortie.flush();
             sortie.writeObject(o); // Echange de données avec le socket client
+            sortie.flush();
+            sortie.close();
             } catch (IOException e) { //En cas d'erreur
                 System.err.println(e.getMessage());
                     return false;
             }
             return true; // En cas de succès
-		
+    }
+    
+    public boolean envoiFichier(Socket socket, File fichier)
+    {
+        
+            InputStream in = null;
+            OutputStream out = null;
+            
+            try {
+                if (fichier != null)
+                {
+                    in = new FileInputStream(fichier);
+                }
+                else
+                    return false;
+                out = socket.getOutputStream();
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+                return false;
+            }
+        
+            byte[] bytes = new byte[16*1024];
+            int count;
+            
+            try {
+                while ((count = in.read(bytes)) > 0) 
+                {
+                    System.out.println("Tour");
+                    out.write(bytes, 0, count);
+                }
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+                return false;
+            }
+        return true;
     }
 }
