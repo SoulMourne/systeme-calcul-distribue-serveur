@@ -3,6 +3,7 @@ package serveur;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -69,6 +70,8 @@ public class ServeurThread extends Thread
         String ipClient = this.socketClient.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
         this.envoiMessage(this.socketClient, "Bienvenue client, vous avez pour adresse IP : "+ipClient);    //Envoie un message au client
         
+        this.envoiObjet(socketClient, new Integer(4));
+        
         while(continuer)
         {
             try {
@@ -86,7 +89,7 @@ public class ServeurThread extends Thread
     }
     
     /**
-     * Envoie une chaine de caractères au client via le socket correspondant
+     * Envoie une chaîne de caractères au client via le socket correspondant
      * @param socketClient socket permettant de communiquer avec le client
      * @param message chaine de caractères à envoyer sur le socket
      * @return booléen si le message a été ou non envoyé
@@ -111,5 +114,21 @@ public class ServeurThread extends Thread
             System.err.println(e.getMessage());
             return null;
         }
+    }
+    
+    
+    public boolean envoiObjet(Socket socketClient, Object o)
+    {
+    	try {
+    		//Connexion des flux de sortie
+			ObjectOutputStream sortie = new ObjectOutputStream(this.socketClient.getOutputStream()); // On instancie un flux de sortie
+			sortie.flush();
+			sortie.writeObject(o); // Echange de données avec le socket client
+		} catch (IOException e) { //En cas d'erreur
+			e.printStackTrace(); 
+			return false;
+		}
+		return true; // En cas de succès
+		
     }
 }

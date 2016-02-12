@@ -9,13 +9,13 @@ import java.net.Socket;
 import java.util.HashMap;
 
 /**
- * Classe faisant l'abstraction d'un serveur et gérant les connexions entrantes et sortante du serveur
+ * Classe faisant l'abstraction d'un serveur et gérant les connexions entrantes et sortantes du serveur
  */
 public class Serveur 
 {
-    private ServerSocket socketServer;//Variable du socket du serveur permettant aux clients de s'y connecter
+    private ServerSocket socketServer; //Variable du socket du serveur permettant aux clients de s'y connecter
     private Socket socketDuClient;  //Socket servant à communiquer avec le client
-    private HashMap <Integer, ServeurThread> connexions; //HashMap permettant de gérer les Serveurs Thread en leur donnant un numero
+    private HashMap <Integer, ServeurThread> connexions; //HashMap permettant de gérer les Serveurs Thread en leur donnant un numéro
     
     /**
      * Constructeur par défaut
