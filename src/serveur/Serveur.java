@@ -9,13 +9,13 @@ import java.net.Socket;
 import java.util.HashMap;
 
 /**
- * Classe faisant l'abstraction d'un serveur et gérant les connexions entrantes et sortante du serveur
+ * Classe faisant l'abstraction d'un serveur et gérant les connexions entrantes et sortantes du serveur
  */
 public class Serveur 
 {
-    private ServerSocket socketServer;//Variable du socket du serveur permettant aux clients de s'y connecter
+    private ServerSocket socketServer; //Variable du socket du serveur permettant aux clients de s'y connecter
     private Socket socketDuClient;  //Socket servant à communiquer avec le client
-    private HashMap <Integer, ServeurThread> connexions; //HashMap permettant de gérer les Serveurs Thread en leur donnant un numero
+    private HashMap <Integer, ServeurThread> connexions; //HashMap permettant de gérer les Serveurs Thread en leur donnant un numéro
     
     /**
      * Constructeur par défaut
@@ -26,7 +26,7 @@ public class Serveur
         socketDuClient = null;  //Initialisation d'un socket pour la communication avec le/les clients
         connexions = new HashMap<>();
         try {
-            socketServer = new ServerSocket(2009);  //Initialisation d'un ServerSocket sur le port 2009
+            socketServer = new ServerSocket(numPort);  //Initialisation d'un ServerSocket sur le port 2009
             System.out.println("Le serveur est à l'écoute du port "+socketServer.getLocalPort());   //Indique sur quel port le serveur est à l'écoute
         } catch (IOException e) {   //En cas d'erreur
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class Serveur
      */
     public static void main(String[] args) 
     {
-        Serveur serveur = new Serveur(2009); //Ouverture du serveur
+        Serveur serveur = new Serveur(5000); //Ouverture du serveur
         
         int i = 0;  //Initialisation d'un compteur
         while(i<20) //Pendant 5 itérations
