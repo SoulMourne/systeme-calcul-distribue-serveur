@@ -9,43 +9,44 @@ import java.io.*;
  */
 public class ParametreCombinaison extends Parametre
 {
-	/**
-	 * Combinaison de paramètre à exécuter
-	 */
-	private ArrayList<String> parametres;
+    /**
+     * Combinaison de paramètre à exécuter
+     */
+    private ArrayList<String> parametres;
 
-	/**
-	 * Itérateur de l'ArrayList des paramètres
-	 */
-	private Iterator iterateur;
+    /**
+     * Itérateur de l'ArrayList des paramètres
+     */
+    private Iterator iterateur;
 
-	/**
-	 * Constructeur par défaut avec un fichier
-	 */
-	public ParametreCombinaison(String fileName)
-	{
-		this.parametres = new ArrayList<String>();
-		String line = null;
+    /**
+     * Constructeur par défaut avec un fichier
+     * @param fileName nom du fichier de paramètre
+     */
+    public ParametreCombinaison(String fileName)
+    {
+        this.parametres = new ArrayList<String>();
+        String line = null;
 
-		try {
-			FileReader fileReader = new FileReader(fileName);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+        try {
+                FileReader fileReader = new FileReader(fileName);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-			int i = 0;
-			while((line = bufferedReader.readLine()) != null)
-			{
-		        this.parametres.add(line);
-			}   
-			bufferedReader.close();         
-		}
-		catch(FileNotFoundException ex) {
-		    System.out.println("Unable to open file '" + fileName + "'");
-		}
-		catch(IOException ex) {
-		    System.out.println("Error reading file '" + fileName + "'");                  
-		}
-		this.iterateur = this.parametres.iterator();
-	}
+                int i = 0;
+                while((line = bufferedReader.readLine()) != null)
+                {
+                this.parametres.add(line);
+                }   
+                bufferedReader.close();         
+        }
+        catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" + fileName + "'");
+        }
+        catch(IOException ex) {
+            System.out.println("Error reading file '" + fileName + "'");                  
+        }
+        this.iterateur = this.parametres.iterator();
+    }
 
 	/**
      * Permet de savoir si il reste des paramètres dans le parcours des paramètres
