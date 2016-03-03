@@ -78,13 +78,22 @@ public class ServeurThread extends Thread
         
         File file = new File("src/test.txt");
         
-        this.envoiFichier(socketClient, file);
+        //A corriger au plus vite, (voir issue #5 sur Bitbucket)
+        /*for(int i = 0;  i<10; i++)
+        {
+            this.envoiObjet(socketClient, i*2);
+        }*/
+        
+        //this.envoiObjet(socketClient, 4);
+        
+        //this.envoiObjet(socketClient, (int)file.length());
+        //this.envoiFichier(socketClient, file);
 
         
         while(continuer)
         {
             try {
-                if (this.in.readLine()== null) //si le socket est fermé
+                if (this.socketClient.isClosed() || this.in.readLine()== null) //si le socket est fermé
                 {
                     continuer = false;
                     this.socketClient.close(); //on ferme le socket du coté serveur
@@ -157,7 +166,7 @@ public class ServeurThread extends Thread
      */
     public boolean envoiFichier(Socket socket, File fichier)
     {
-       
+        //this.envoiObjet(socketClient, (int)fichier.length());       
         byte[] myByteArray = new byte[(int)fichier.length()];
         FileInputStream fis = null;
         try 
