@@ -78,11 +78,8 @@ public class ServeurThread extends Thread
         
         File file = new File("src/test.txt");
         
-        try {
-            this.envoiFichier(socketClient, file);
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
+        this.envoiFichier(socketClient, file);
+
         
         while(continuer)
         {
@@ -128,7 +125,14 @@ public class ServeurThread extends Thread
         }
     }
     
-    
+    /**
+     * Envoie un objet sur le socket client
+     * Pour un envoi de fichier voir envoiFichier
+     * @see envoiFichier
+     * @param socketClient le socket sur lequel envoyer l'objet
+     * @param o l'objet a envoyé
+     * @return un boolean permettant de savoir si l'objet a été envoyé
+     */
     public boolean envoiObjet(Socket socketClient, Object o)
     {
         try {
@@ -145,17 +149,43 @@ public class ServeurThread extends Thread
             return true; // En cas de succès
     }
     
-    public boolean envoiFichier(Socket socket, File fichier) throws FileNotFoundException, IOException
+    /**
+     * Envoie un fichier sur le socket client
+     * @param socket le socket sur lequel envoyer l'objet
+     * @param fichier le fichier à envoyer
+     * @return un boolean permettant de savoir si l'objet a été envoyé
+     */
+    public boolean envoiFichier(Socket socket, File fichier)
     {
-
+       
         byte[] myByteArray = new byte[(int)fichier.length()];
-        FileInputStream fis = new FileInputStream(fichier);
+        FileInputStream fis = null;
+        try 
+        {
+            fis = new FileInputStream(fichier);
+        } catch (FileNotFoundException ex) {
+            System.err.println(ex.getMessage());
+            return false;
+        }
         BufferedInputStream bis = new BufferedInputStream(fis);
-        bis.read(myByteArray,0,myByteArray.length);
-        OutputStream os = socket.getOutputStream();
+        OutputStream os = null;
+        try 
+        {
+            bis.read(myByteArray,0,myByteArray.length);
+            os = socket.getOutputStream();
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+            return false;
+        }
         System.out.println("Sending  " + fichier.getName()+"("+myByteArray.length+" bytes)");
-        os.write(myByteArray,0,myByteArray.length);
-        os.flush();
+        try 
+        {
+            os.write(myByteArray,0,myByteArray.length);
+            os.flush();
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+            return false;
+        }
         System.out.println("Done");
         return true;
     }
