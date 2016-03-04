@@ -71,13 +71,8 @@ public class ServeurThread extends Thread
         String ipClient = this.socketClient.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
         this.envoiMessage(this.socketClient, "Bienvenue client, vous avez pour adresse IP : "+ipClient);    //Envoie un message au client
         
-        for(int i = 0;  i<10; i++)
-        {
-            this.envoiObjet(socketClient, i*2);
-        }
-        
-        //this.envoiObjet(socketClient, (int)file.length());
-        //this.envoiFichier(socketClient, file);
+        File file = new File("src/antnest");
+        this.envoiFichier(socketClient, file);
         
         while(continuer)
         {
@@ -171,7 +166,7 @@ public class ServeurThread extends Thread
      */
     public boolean envoiFichier(Socket socket, File fichier)
     {
-        //this.envoiObjet(socketClient, (int)fichier.length());       
+        this.envoiObjet(socketClient, (int)fichier.length());       
         byte[] myByteArray = new byte[(int)fichier.length()];
         FileInputStream fis = null;
         try 
