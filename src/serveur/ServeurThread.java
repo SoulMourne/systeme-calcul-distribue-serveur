@@ -37,10 +37,6 @@ public class ServeurThread extends Thread
      * Permet de lire des caractères
      */
     private BufferedReader in;
-    /**
-     * Permet d'écrire un message
-     */
-    private PrintWriter out;
     
     /**
      * Constructeur par défaut prenant le numéro du client et le socket du client
@@ -55,7 +51,6 @@ public class ServeurThread extends Thread
         this.numClient = parNumClient;
         try {
             this.in = new BufferedReader (new InputStreamReader (this.socketClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
-        this.out = new PrintWriter(socketClient.getOutputStream());   //Récupère l'OutputStream du socket du client et ouvre un PrintWriter permettant au serveur d'y écrire
         } catch (IOException e)
         {
             System.err.println(e.getMessage());
@@ -76,19 +71,13 @@ public class ServeurThread extends Thread
         String ipClient = this.socketClient.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
         this.envoiMessage(this.socketClient, "Bienvenue client, vous avez pour adresse IP : "+ipClient);    //Envoie un message au client
         
-        File file = new File("src/test.txt");
-        
-        //A corriger au plus vite, (voir issue #5 sur Bitbucket)
-        /*for(int i = 0;  i<10; i++)
+        for(int i = 0;  i<10; i++)
         {
             this.envoiObjet(socketClient, i*2);
-        }*/
-        
-        //this.envoiObjet(socketClient, 4);
+        }
         
         //this.envoiObjet(socketClient, (int)file.length());
         //this.envoiFichier(socketClient, file);
-
         
         while(continuer)
         {
@@ -114,9 +103,18 @@ public class ServeurThread extends Thread
      */
     public boolean envoiMessage(Socket socketClient,String message)
     {
-        out.println(message);
-        out.flush();
-        return !out.checkError();
+        PrintWriter outString;
+        try 
+        {
+            outString = new PrintWriter(this.socketClient.getOutputStream());
+            outString.println(message);
+            outString.flush();
+            Thread.sleep(100);
+            return !outString.checkError();
+        } catch (IOException | InterruptedException ex) {
+            System.err.println(ex.getMessage());
+            return false;
+        }
     }
     
     /**
@@ -144,18 +142,25 @@ public class ServeurThread extends Thread
      */
     public boolean envoiObjet(Socket socketClient, Object o)
     {
-        try {
+        try 
+        {
             //Connexion des flux de sortie
-            ObjectOutputStream sortie = new ObjectOutputStream(this.socketClient.getOutputStream()); // On instancie un flux de sortie
-            sortie.flush();
-            sortie.writeObject(o); // Echange de données avec le socket client
-            sortie.flush();
-            sortie.close();
-            } catch (IOException e) { //En cas d'erreur
+            ObjectOutputStream outObject = new ObjectOutputStream(this.socketClient.getOutputStream()); // On instancie un flux de sortie
+            outObject.flush();
+            outObject.writeObject(o); // Echange de données avec le socket client
+            outObject.flush();
+        } catch (IOException e) { //En cas d'erreur
                 System.err.println(e.getMessage());
                     return false;
-            }
-            return true; // En cas de succès
+        }
+        try 
+        {
+            Thread.sleep(100); 
+        } catch (InterruptedException ex) 
+        {
+            System.err.println(ex.getMessage());
+        }
+        return true; // En cas de succès
     }
     
     /**
