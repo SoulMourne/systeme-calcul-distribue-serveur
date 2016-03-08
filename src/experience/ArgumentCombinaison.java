@@ -5,26 +5,26 @@ import java.util.Iterator;
 import java.io.*;
 
 /**
- * Classe qui permet d'enregistrer les tuples de paramètres à exécuter
+ * Classe qui permet d'enregistrer les tuples d'arguments à exécuter
  */
-public class ParametreCombinaison extends Parametre
+public class ArgumentCombinaison extends Argument
 {
 	/**
-	 * Combinaison de paramètre à exécuter
+	 * Combinaison d'argument à exécuter
 	 */
-	private ArrayList<String> parametres;
+	private ArrayList<String> Arguments;
 
 	/**
-	 * Itérateur de l'ArrayList des paramètres
+	 * Itérateur de l'ArrayList des arguments
 	 */
 	private Iterator iterateur;
 
 	/**
 	 * Constructeur par défaut avec un fichier
 	 */
-	public ParametreCombinaison(String fileName)
+	public ArgumentCombinaison(String fileName)
 	{
-		this.parametres = new ArrayList<String>();
+		this.Arguments = new ArrayList<String>();
 		String line = null;
 
 		try {
@@ -34,7 +34,7 @@ public class ParametreCombinaison extends Parametre
 			int i = 0;
 			while((line = bufferedReader.readLine()) != null)
 			{
-		        this.parametres.add(line);
+		        this.Arguments.add(line);
 			}   
 			bufferedReader.close();         
 		}
@@ -44,12 +44,12 @@ public class ParametreCombinaison extends Parametre
 		catch(IOException ex) {
 		    System.out.println("Error reading file '" + fileName + "'");                  
 		}
-		this.iterateur = this.parametres.iterator();
+		this.iterateur = this.Arguments.iterator();
 	}
 
 	/**
-     * Permet de savoir si il reste des paramètres dans le parcours des paramètres
-     * @return true si il reste des paramètres, false sinon
+     * Permet de savoir si il reste des arguments dans le parcours des arguments
+     * @return true si il reste des arguments, false sinon
      */
     public boolean hasNext()
     {
@@ -57,8 +57,8 @@ public class ParametreCombinaison extends Parametre
     }
 
     /**
-     * Retourne le prochain paramètre du parcours
-     * @return paramètre sous forme de chaine de caractère
+     * Retourne le prochain argument du parcours
+     * @return argument sous forme de chaine de caractère
      */
     public String next()
     {
