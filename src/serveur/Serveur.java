@@ -125,6 +125,10 @@ public class Serveur
         return  this.socketServer;  //Renvoie le socket serveur
     }
     
+    /**
+     * Récupère une HashMap contenant tous les ServeurThread et indexés selon leur numero dans la file
+     * @return HashMap contenant tous les ServeurThread et indexés selon leur numero dans la file
+     */
     public HashMap<Integer, ServeurThread> getConnexions() 
     {
         return connexions;

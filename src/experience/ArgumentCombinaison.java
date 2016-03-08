@@ -12,7 +12,7 @@ public class ArgumentCombinaison extends Argument
 	/**
 	 * Combinaison d'argument à exécuter
 	 */
-	private ArrayList<String> Arguments;
+	private ArrayList<String> arguments;
 
 	/**
 	 * Itérateur de l'ArrayList des arguments
@@ -24,17 +24,17 @@ public class ArgumentCombinaison extends Argument
 	 */
 	public ArgumentCombinaison(String fileName)
 	{
-		this.Arguments = new ArrayList<String>();
+		this.arguments = new ArrayList<String>();
 		String line = null;
 
-		try {
-			FileReader fileReader = new FileReader(fileName);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+        try {
+            FileReader fileReader = new FileReader(fileName);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 			int i = 0;
 			while((line = bufferedReader.readLine()) != null)
 			{
-		        this.Arguments.add(line);
+		        this.arguments.add(line);
 			}   
 			bufferedReader.close();         
 		}
@@ -44,7 +44,7 @@ public class ArgumentCombinaison extends Argument
 		catch(IOException ex) {
 		    System.out.println("Error reading file '" + fileName + "'");                  
 		}
-		this.iterateur = this.Arguments.iterator();
+		this.iterateur = this.arguments.iterator();
 	}
 
 	/**

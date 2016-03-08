@@ -37,10 +37,6 @@ public class ServeurThread extends Thread
      * Permet de lire des caractères
      */
     private BufferedReader in;
-    /**
-     * Permet d'écrire un message
-     */
-    private PrintWriter out;
     
     /**
      * Constructeur par défaut prenant le numéro du client et le socket du client
@@ -55,7 +51,6 @@ public class ServeurThread extends Thread
         this.numClient = parNumClient;
         try {
             this.in = new BufferedReader (new InputStreamReader (this.socketClient.getInputStream())); //permet de lire les caractères provenant du socketduserveur
-        this.out = new PrintWriter(socketClient.getOutputStream());   //Récupère l'OutputStream du socket du client et ouvre un PrintWriter permettant au serveur d'y écrire
         } catch (IOException e)
         {
             System.err.println(e.getMessage());
@@ -76,18 +71,13 @@ public class ServeurThread extends Thread
         String ipClient = this.socketClient.getRemoteSocketAddress().toString()+"\n";   //Récupère l'adresse IP du client
         this.envoiMessage(this.socketClient, "Bienvenue client, vous avez pour adresse IP : "+ipClient);    //Envoie un message au client
         
-        File file = new File("src/test.txt");
-        
-        try {
-            this.envoiFichier(socketClient, file);
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
+        File file = new File("src/antnest");
+        this.envoiFichier(socketClient, file);
         
         while(continuer)
         {
             try {
-                if (this.in.readLine()== null) //si le socket est fermé
+                if (this.socketClient.isClosed() || this.in.readLine()== null) //si le socket est fermé
                 {
                     continuer = false;
                     this.socketClient.close(); //on ferme le socket du coté serveur
@@ -108,9 +98,18 @@ public class ServeurThread extends Thread
      */
     public boolean envoiMessage(Socket socketClient,String message)
     {
-        out.println(message);
-        out.flush();
-        return !out.checkError();
+        PrintWriter outString;
+        try 
+        {
+            outString = new PrintWriter(this.socketClient.getOutputStream());
+            outString.println(message);
+            outString.flush();
+            Thread.sleep(100);
+            return !outString.checkError();
+        } catch (IOException | InterruptedException ex) {
+            System.err.println(ex.getMessage());
+            return false;
+        }
     }
     
     /**
@@ -128,34 +127,74 @@ public class ServeurThread extends Thread
         }
     }
     
-    
+    /**
+     * Envoie un objet sur le socket client
+     * Pour un envoi de fichier voir envoiFichier
+     * @see envoiFichier
+     * @param socketClient le socket sur lequel envoyer l'objet
+     * @param o l'objet a envoyé
+     * @return un boolean permettant de savoir si l'objet a été envoyé
+     */
     public boolean envoiObjet(Socket socketClient, Object o)
     {
-        try {
+        try 
+        {
             //Connexion des flux de sortie
-            ObjectOutputStream sortie = new ObjectOutputStream(this.socketClient.getOutputStream()); // On instancie un flux de sortie
-            sortie.flush();
-            sortie.writeObject(o); // Echange de données avec le socket client
-            sortie.flush();
-            sortie.close();
-            } catch (IOException e) { //En cas d'erreur
+            ObjectOutputStream outObject = new ObjectOutputStream(this.socketClient.getOutputStream()); // On instancie un flux de sortie
+            outObject.flush();
+            outObject.writeObject(o); // Echange de données avec le socket client
+            outObject.flush();
+        } catch (IOException e) { //En cas d'erreur
                 System.err.println(e.getMessage());
                     return false;
-            }
-            return true; // En cas de succès
+        }
+        try 
+        {
+            Thread.sleep(100); 
+        } catch (InterruptedException ex) 
+        {
+            System.err.println(ex.getMessage());
+        }
+        return true; // En cas de succès
     }
     
-    public boolean envoiFichier(Socket socket, File fichier) throws FileNotFoundException, IOException
+    /**
+     * Envoie un fichier sur le socket client
+     * @param socket le socket sur lequel envoyer l'objet
+     * @param fichier le fichier à envoyer
+     * @return un boolean permettant de savoir si l'objet a été envoyé
+     */
+    public boolean envoiFichier(Socket socket, File fichier)
     {
-
+        this.envoiObjet(socketClient, (int)fichier.length());       
         byte[] myByteArray = new byte[(int)fichier.length()];
-        FileInputStream fis = new FileInputStream(fichier);
+        FileInputStream fis = null;
+        try 
+        {
+            fis = new FileInputStream(fichier);
+        } catch (FileNotFoundException ex) {
+            System.err.println(ex.getMessage());
+            return false;
+        }
         BufferedInputStream bis = new BufferedInputStream(fis);
-        bis.read(myByteArray,0,myByteArray.length);
-        OutputStream os = socket.getOutputStream();
+        OutputStream os = null;
+        try 
+        {
+            bis.read(myByteArray,0,myByteArray.length);
+            os = socket.getOutputStream();
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+            return false;
+        }
         System.out.println("Sending  " + fichier.getName()+"("+myByteArray.length+" bytes)");
-        os.write(myByteArray,0,myByteArray.length);
-        os.flush();
+        try 
+        {
+            os.write(myByteArray,0,myByteArray.length);
+            os.flush();
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+            return false;
+        }
         System.out.println("Done");
         return true;
     }
