@@ -76,16 +76,4 @@ public class ParametreInterval extends Parametre
     	this.current += this.step;
     	return resultat;
     }
-
-    /**
-     * Permet de savoir si il reste des paramètres dans le parcours des paramètres
-     * @return true si il reste des paramètres, false sinon
-     */
-    public abstract boolean hasNext();
-
-    /**
-     * Retourne le prochain paramètre du parcours
-     * @return paramètre sous forme de chaine de caractère
-     */
-    public abstract String next();
 }
