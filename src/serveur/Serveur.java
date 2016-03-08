@@ -23,8 +23,9 @@ public class Serveur
      */
     public Serveur(int numPort)
     {
+    	this.installationClients();
         socketDuClient = null;  //Initialisation d'un socket pour la communication avec le/les clients
-        connexions = new HashMap<>();
+        connexions = new HashMap<Integer, ServeurThread>();
         try {
             socketServer = new ServerSocket(numPort);  //Initialisation d'un ServerSocket sur le port 2009
             System.out.println("Le serveur est à l'écoute du port "+socketServer.getLocalPort());   //Indique sur quel port le serveur est à l'écoute
@@ -127,5 +128,30 @@ public class Serveur
     public HashMap<Integer, ServeurThread> getConnexions() 
     {
         return connexions;
+    }
+    
+    /**
+     * Installe les clients
+     */
+    public void installationClients()
+    {
+    	try{
+    		String cmd = "yum install sshpass -y";
+			Process p = Runtime.getRuntime().exec(cmd);
+			p.waitFor();
+    	
+			cmd = "bash serveur/installation.sh 192.168.0.113 client/client.sh";
+			p = Runtime.getRuntime().exec(cmd);
+			p.waitFor();
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		    String line = "";
+		    while ((line = reader.readLine()) != null) {
+		        System.out.println(line);
+		    }
+		    
+		} catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
