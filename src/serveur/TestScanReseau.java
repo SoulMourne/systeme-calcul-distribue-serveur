@@ -14,6 +14,7 @@ public class TestScanReseau {
     //Variables
     private static ArrayList<String> listIP = new ArrayList<>();
     private static String ip ; 
+    private static String ipRoot ; 
     private static final int port = 22;
     private static final int timeout = 100;
     private static int clients;
@@ -24,13 +25,13 @@ public class TestScanReseau {
         //Entete du tableau
         ScanReseau.affichage();
         clients = 0;
-        ip = "192.168.1.";
+        ipRoot = "192.168.0.";
         int lastByte= 0;
         
         //Boucle de thread
         for (lastByte=0 ; lastByte<255 ;lastByte++){
             
-            ip = "192.168.1."+lastByte;
+            ip = ipRoot+lastByte;
             ScanReseau lan = new ScanReseau(ip);
             lan.start();
             if (lan.portIsOpen(ip, port, timeout) == true)
@@ -40,11 +41,9 @@ public class TestScanReseau {
             }  
         }
         Thread.sleep(2000);
-        lastByte= 0;
-        ip = "192.168.1."+lastByte;
         System.out.println("ArrayList d'adressesIP : " + listIP + "\n");
         
-        System.out.println(clients + " client(s) connecté(s) sur le reseau " + ip + " sur le port " + port );
+        System.out.println(clients + " client(s) connecté(s) sur le reseau " + ipRoot+"0" + " sur le port " + port );
     }
   
 }
