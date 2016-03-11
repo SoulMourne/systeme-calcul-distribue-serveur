@@ -20,10 +20,8 @@ public class ScanReseau extends Thread {
 
     //Variables
     private final String ipRoot;
-    final int port = 22;
-    final int timeout = 100;
     
-    
+    //Constructeur
     public ScanReseau(String parIpRoot){
         this.ipRoot = parIpRoot;
     }
