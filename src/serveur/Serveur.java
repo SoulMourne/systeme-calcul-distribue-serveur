@@ -143,7 +143,7 @@ public class Serveur
 			Process p = Runtime.getRuntime().exec(cmd);
 			p.waitFor();
     	
-    		for (int i = 192 ; i<199 ; i++)
+    		for (int i = 126 ; i<138 ; i++)
     		{
     			new Installation(i).start();
 		    }
