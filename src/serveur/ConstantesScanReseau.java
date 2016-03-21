@@ -15,7 +15,7 @@ public class ConstantesScanReseau {
     protected static final int port = 22;
     protected static final int portWindows = 445;
     protected static final int timeout = 100;
-    protected static final int hostMin = 50;
-    protected static final int hostMax = 60;
+    protected static final int hostMin = 0;
+    protected static final int hostMax = 255;
     
 }
