@@ -23,7 +23,6 @@ public class Serveur
      */
     public Serveur(int numPort)
     {
-    	this.installationClients();
         socketDuClient = null;  //Initialisation d'un socket pour la communication avec le/les clients
         connexions = new HashMap<Integer, ServeurThread>();
         try {
@@ -32,7 +31,7 @@ public class Serveur
         } catch (IOException e) {   //En cas d'erreur
             e.printStackTrace();
         }
-        
+        this.installationClients();
     }
     
     /**
@@ -144,14 +143,9 @@ public class Serveur
 			Process p = Runtime.getRuntime().exec(cmd);
 			p.waitFor();
     	
-			cmd = "bash serveur/installation.sh 192.168.0.113 client/client.sh";
-			p = Runtime.getRuntime().exec(cmd);
-			p.waitFor();
-			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		    String line = "";
-		    while ((line = reader.readLine()) != null) {
-		        System.out.println(line);
+    		for (int i = 192 ; i<199 ; i++)
+    		{
+    			new Installation(i).start();
 		    }
 		    
 		} catch(Exception e){
