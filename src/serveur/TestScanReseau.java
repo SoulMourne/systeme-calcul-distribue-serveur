@@ -5,21 +5,35 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- *
+ * Classe de test sur le scan reseau : fonction main
  * @author sahmed
  */
 
 public class TestScanReseau {
     
-    //Variables
-    private static ArrayList<String> listIP = new ArrayList<>();
-    private static String ip ; 
+    /**
+     * Voir classe ConstantesScanReseau
+     */
     private static String ipRoot = ConstantesScanReseau.ipRoot; 
     private static final int port = ConstantesScanReseau.port;
     private static final int portWindows = ConstantesScanReseau.portWindows;
     private static final int timeout = ConstantesScanReseau.timeout;
     private static final int hostMin = ConstantesScanReseau.hostMin;
     private static final int hostMax = ConstantesScanReseau.hostMax;
+    
+    /**
+     * Liste d'adresses IP de machines disponibles sur port ssh (Windows Exclus)
+     */
+    private static ArrayList<String> listIP = new ArrayList<>();
+    
+    /**
+     * Adresse ip
+     */
+    private static String ip ;
+    
+    /**
+     * Clients
+     */
     private static int clients;
       
     

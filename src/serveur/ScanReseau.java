@@ -9,10 +9,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *Cette class permet de scanner le reseau et recuperer les adresses ip 
- * des clients en voyant ceux qui sont disponibles (avec un ping)
+ * Cette class permet de scanner le reseau et recuperer les adresses ip 
+ * des clients en voyant ceux qui sont disponibles sur le port 22 .
+ * On vérifie aussi à ne pas récupérer les machines windows.
  * @author sahmed
- * reference site web (inspiration) : http://www.fobec.com/java/1141/scanner-postes-sur-reseau-local.html
  */
 
 
