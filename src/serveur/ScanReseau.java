@@ -26,6 +26,10 @@ public class ScanReseau extends Thread {
         this.ipRoot = parIpRoot;
     }
     
+    /**
+     * Disponibilité d'une machine
+     * @return Dead or Alive
+     */
     public void joignable(){
         String[] nip = ipRoot.split("\\.");
         if (nip.length !=4){
@@ -50,8 +54,8 @@ public class ScanReseau extends Thread {
         }
     }
     
+    //Affichage de l'entete du tableau
     public static void affichage(){
-        //Entete du tableau
         System.out.printf("%s\t\t%s\n\n", "AdresseIP", "Etat");
     }
     
@@ -62,7 +66,6 @@ public class ScanReseau extends Thread {
      * @param Ipv4Adr adresse IP du poste
      * @return boolean
      */
-    
     public static boolean isAlive(String Ipv4Adr) {
         Process p1;
         boolean reachable = false;
@@ -95,6 +98,7 @@ public class ScanReseau extends Thread {
         }
     }
     
+    //Run du Thread
     public void run()
     {
         this.joignable();
